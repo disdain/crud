@@ -82,7 +82,7 @@ class Mapper {
 		if ($st->rowCount()) {
 			while (($data = $st->fetch(\PDO::FETCH_ASSOC))) {
 				foreach ($data as $key => $value) {
-					if (preg_match('/&a:[0-9]+\{.*\}$/', $value)) {
+					if (preg_match('/^a:[0-9]+\{.*\}$/', $value)) {
 						$data[$key] = unserialize($value);
 					}
 				}
