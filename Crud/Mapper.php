@@ -41,6 +41,12 @@ class Mapper {
 
 		$keys = array_keys($data);
 
+		foreach ($data as $key => $value) {
+			if (is_array($value)) {
+				$data[$key] = serialize($value);
+			}
+		}
+
 		$query = "INSERT INTO $name (" . implode(', ', $keys) . ") VALUES (:" . implode(', :', $keys) . ")";
 
 		$st = self::$pdo->prepare($query);
@@ -74,8 +80,14 @@ class Mapper {
 		$result = array();
 
 		if ($st->rowCount()) {
-			while (($row = $st->fetch(\PDO::FETCH_ASSOC))) {
-				array_push($result, new Model($model, $row));
+			while (($data = $st->fetch(\PDO::FETCH_ASSOC))) {
+				foreach ($data as $key => $value) {
+					if (preg_match('/&a:[0-9]+\{.*\}$/', $value)) {
+						$data[$key] = unserialize($value);
+					}
+				}
+
+				array_push($result, new Model($model, $data));
 			}
 		}
 
@@ -95,11 +107,13 @@ class Mapper {
 			if ($key !== 'id') {
 				array_push($keys, "$key = :$key");
 			}
+
+			if (is_array($value)) {
+				$data[$key] = serialize($value);
+			}
 		}
 
 		$query .= implode(', ', $keys) . " WHERE id = :id";
-
-		var_dump($query);
 
 		$st = self::$pdo->prepare($query);
 		$st->execute($data);
