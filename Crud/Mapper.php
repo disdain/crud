@@ -55,11 +55,9 @@ class Mapper {
 		$query = "SELECT * FROM $model";
 
 		if (count($where)) {
-			$str = '';
-			foreach ($where as $key => $value) {
-				$str .= ($str ? " AND " : " WHERE ") . "$key = :$key";
-			}
-			$query .= $str;
+			$keys = array();
+			foreach ($where as $key => $value) array_push($keys, "$key = :$key");
+			$query .= " WHERE " . implode(" AND ", $keys);
 		}
 
 		if ($limit) {
