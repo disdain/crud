@@ -31,13 +31,7 @@ class Crud {
 	}
 
 	public static function read ($model, $where = array()) {
-		self::init();
-
-		if (!is_array($where)) {
-			$where = array('id' => $where);
-		}
-
-		$result = self::$mapper->select($model, $where, 1);
+		$result = self::read_all($model, $where, 1);
 		return count($result) ? $result[0] : null;
 	}
 
