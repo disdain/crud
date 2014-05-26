@@ -11,8 +11,12 @@ class Model {
 		$this->data = $data;
 	}
 
-	public function __get ($key) {
-		return isset($this->data[$key]) ? $this->data[$key] : null;
+	public function &__get ($key) {
+		if (isset($this->data[$key]))
+			return $this->data[$key];
+
+		$return = null;
+		return $return;
 	}
 
 	public function __set ($key, $value) {

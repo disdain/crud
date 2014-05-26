@@ -32,7 +32,7 @@ class Crud {
 
 	public static function read ($model, $where = array()) {
 		$result = self::read_all($model, $where, 1);
-		return count($result) ? $result[0] : null;
+		return count($result) ? $result[0] : new Model($model);
 	}
 
 	public static function read_all ($model, $where = array(), $limit = 0, $order = '') {
